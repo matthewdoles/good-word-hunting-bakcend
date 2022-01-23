@@ -1,4 +1,4 @@
-const generateRoomNumber = (length) => {
+const generateLobbyNumber = (length) => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const charactersLength = characters.length;
@@ -11,5 +11,5 @@ const generateRoomNumber = (length) => {
 };
 
 module.exports = {
-  generateRoomNumber,
+  generateLobbyNumber,
 };
