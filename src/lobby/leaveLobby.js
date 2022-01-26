@@ -1,6 +1,6 @@
-const { getUsersInLobby, removeUser } = require('../functions/lobby');
+import { getUsersInLobby, removeUser } from '../functions/lobby.js';
 
-const leaveLobby = (io, socket) => {
+export const leaveLobby = (io, socket) => {
   socket.on('leaveLobby', ({ lobbyId, userId }) => {
     const user = removeUser(lobbyId, userId);
     if (user) {
@@ -10,5 +10,3 @@ const leaveLobby = (io, socket) => {
     }
   });
 };
-
-module.exports = { leaveLobby };

@@ -1,6 +1,6 @@
-const { createLobby, addUser, getUsersInLobby } = require('../functions/lobby');
+import { createLobby, addUser, getUsersInLobby } from '../functions/lobby.js';
 
-const createNewLobby = (io, socket) => {
+export const createNewLobby = (io, socket) => {
   socket.on('createLobby', ({ profileImage, username }, callback) => {
     const newLobby = createLobby();
     const { error, user } = addUser({
@@ -26,8 +26,4 @@ const createNewLobby = (io, socket) => {
     });
     callback();
   });
-};
-
-module.exports = {
-  createNewLobby,
 };

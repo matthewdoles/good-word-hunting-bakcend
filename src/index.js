@@ -1,21 +1,24 @@
-const httpServer = require('http').createServer();
-const io = require('socket.io')(httpServer, {
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+
+const httpServer = createServer();
+const io = new Server(httpServer, {
   cors: {
-    origin: 'https://good-word-hunting.vercel.app/*',
+    origin: 'https://good-word-hunting.vercel.app',
   },
 });
 
-const { createNewLobby } = require('./lobby/createNewLobby');
-const { joinLobby } = require('./lobby/joinLobby');
-const {
+import { createNewLobby } from './lobby/createNewLobby.js';
+import { joinLobby } from './lobby/joinLobby.js';
+import { leaveLobby } from './lobby/leaveLobby.js';
+import {
   getUsersInLobby,
   startLobbyGame,
   removeUserWithouLobbyId,
   getLobbyGameProgress,
   submitUserGuess,
   checkUsersDoneGuessing,
-} = require('./functions/lobby');
-const { leaveLobby } = require('./lobby/leaveLobby');
+} from './functions/lobby.js';
 
 io.on('connection', (socket) => {
   createNewLobby(io, socket);
@@ -48,7 +51,7 @@ io.on('connection', (socket) => {
     }
   });
 });
-
-httpServer.listen(process.env.PORT || 8080, () => {
-  console.log('listening on *:8080');
+const port = process.env.PORT || 8080;
+httpServer.listen(port, () => {
+  console.log(`listening on *:${port}`);
 });

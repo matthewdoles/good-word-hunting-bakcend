@@ -1,4 +1,4 @@
-const generateLobbyNumber = (length) => {
+export const generateLobbyNumber = (length) => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const charactersLength = characters.length;
@@ -8,8 +8,4 @@ const generateLobbyNumber = (length) => {
   }
 
   return result;
-};
-
-module.exports = {
-  generateLobbyNumber,
 };

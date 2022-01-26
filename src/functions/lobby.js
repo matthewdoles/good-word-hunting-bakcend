@@ -1,9 +1,9 @@
-const { generateLobbyNumber } = require('./util');
+import { generateLobbyNumber } from './util.js';
 
 const lobbies = [];
 
-const createLobby = () => {
-  lobby = {
+export const createLobby = () => {
+  const lobby = {
     doneGuessing: false,
     gameInProgress: false,
     lobbyId: generateLobbyNumber(4),
@@ -14,7 +14,7 @@ const createLobby = () => {
   return lobby;
 };
 
-const addUser = ({ id, username, profileImage, isAdmin, lobbyId }) => {
+export const addUser = ({ id, username, profileImage, isAdmin, lobbyId }) => {
   if (!username) {
     return {
       error: 'Username required!',
@@ -52,7 +52,7 @@ const addUser = ({ id, username, profileImage, isAdmin, lobbyId }) => {
   return { user };
 };
 
-const removeUser = (lobbyId, userId) => {
+export const removeUser = (lobbyId, userId) => {
   const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
   if (lobbyIndex == -1) {
     return;
@@ -66,7 +66,7 @@ const removeUser = (lobbyId, userId) => {
   }
 };
 
-const removeUserWithouLobbyId = (userId) => {
+export const removeUserWithouLobbyId = (userId) => {
   let user;
   lobbies.forEach((lobby) => {
     const userIndex = lobby.users.findIndex((user) => user.id === userId);
@@ -77,7 +77,7 @@ const removeUserWithouLobbyId = (userId) => {
   return user;
 };
 
-const getUsersInLobby = (lobbyId) => {
+export const getUsersInLobby = (lobbyId) => {
   const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
   if (lobbyIndex == -1) {
     return;
@@ -85,7 +85,7 @@ const getUsersInLobby = (lobbyId) => {
   return lobbies[lobbyIndex].users;
 };
 
-const startLobbyGame = (lobbyId, mediaId) => {
+export const startLobbyGame = (lobbyId, mediaId) => {
   const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
   if (lobbyIndex == -1) {
     return;
@@ -94,7 +94,7 @@ const startLobbyGame = (lobbyId, mediaId) => {
   lobbies[lobbyIndex].mediaId = mediaId;
 };
 
-const getLobbyGameProgress = (lobbyId) => {
+export const getLobbyGameProgress = (lobbyId) => {
   const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
   if (lobbyIndex == -1) {
     return;
@@ -105,7 +105,7 @@ const getLobbyGameProgress = (lobbyId) => {
   };
 };
 
-const submitUserGuess = (userId, lobbyId, guess, points) => {
+export const submitUserGuess = (userId, lobbyId, guess, points) => {
   const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
   if (lobbyIndex == -1) {
     return;
@@ -124,7 +124,7 @@ const submitUserGuess = (userId, lobbyId, guess, points) => {
   }
 };
 
-const checkUsersDoneGuessing = (lobbyId) => {
+export const checkUsersDoneGuessing = (lobbyId) => {
   const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
   if (lobbyIndex == -1) {
     return false;
@@ -139,16 +139,4 @@ const checkUsersDoneGuessing = (lobbyId) => {
     lobbies[lobbyIndex].doneGuessing = doneGuessing;
   }
   return doneGuessing;
-};
-
-module.exports = {
-  addUser,
-  checkUsersDoneGuessing,
-  createLobby,
-  removeUser,
-  getUsersInLobby,
-  removeUserWithouLobbyId,
-  startLobbyGame,
-  submitUserGuess,
-  getLobbyGameProgress,
 };

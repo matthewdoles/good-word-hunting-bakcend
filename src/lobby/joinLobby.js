@@ -1,10 +1,10 @@
-const {
+import {
   addUser,
   getUsersInLobby,
   getLobbyGameProgress,
-} = require('../functions/lobby');
+} from '../functions/lobby.js';
 
-const joinLobby = (io, socket) => {
+export const joinLobby = (io, socket) => {
   socket.on('joinLobby', (userInfo, callback) => {
     const { error, user } = addUser({
       id: socket.id,
@@ -34,4 +34,3 @@ const joinLobby = (io, socket) => {
     callback();
   });
 };
-module.exports = { joinLobby };
