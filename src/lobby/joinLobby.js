@@ -25,7 +25,7 @@ const joinLobby = (io, socket) => {
     });
 
     io.to(user.id).emit('gameStarted', {
-      gameInProgress: getLobbyGameProgress(user.lobbyId),
+      ...getLobbyGameProgress(user.lobbyId),
     });
 
     io.to(user.lobbyId).emit('updateLobbyUsers', {

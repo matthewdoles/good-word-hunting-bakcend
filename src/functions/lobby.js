@@ -3,7 +3,13 @@ const { generateLobbyNumber } = require('./util');
 const lobbies = [];
 
 const createLobby = () => {
-  lobby = { gameInProgress: false, lobbyId: generateLobbyNumber(4), users: [] };
+  lobby = {
+    doneGuessing: false,
+    gameInProgress: false,
+    lobbyId: generateLobbyNumber(4),
+    mediaId: '',
+    users: [],
+  };
   lobbies.push(lobby);
   return lobby;
 };
@@ -31,7 +37,17 @@ const addUser = ({ id, username, profileImage, isAdmin, lobbyId }) => {
     };
   }
 
-  const user = { id, username, profileImage, isAdmin, lobbyId };
+  const user = {
+    id,
+    username,
+    profileImage,
+    isAdmin,
+    lobbyId,
+    isGuessing: true,
+    guess: '',
+    score: 0,
+    scoreAdded: 0,
+  };
   lobbies[lobbyIndex].users.push(user);
   return { user };
 };
@@ -69,12 +85,13 @@ const getUsersInLobby = (lobbyId) => {
   return lobbies[lobbyIndex].users;
 };
 
-const startLobbyGame = (lobbyId) => {
+const startLobbyGame = (lobbyId, mediaId) => {
   const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
   if (lobbyIndex == -1) {
     return;
   }
   lobbies[lobbyIndex].gameInProgress = true;
+  lobbies[lobbyIndex].mediaId = mediaId;
 };
 
 const getLobbyGameProgress = (lobbyId) => {
@@ -82,15 +99,56 @@ const getLobbyGameProgress = (lobbyId) => {
   if (lobbyIndex == -1) {
     return;
   }
-  return lobbies[lobbyIndex].gameInProgress;
+  return {
+    gameInProgress: lobbies[lobbyIndex].gameInProgress,
+    mediaId: lobbies[lobbyIndex].mediaId,
+  };
+};
+
+const submitUserGuess = (userId, lobbyId, guess, points) => {
+  const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
+  if (lobbyIndex == -1) {
+    return;
+  }
+  const userIndex = lobbies[lobbyIndex].users.findIndex(
+    (user) => user.id === userId
+  );
+  if (userIndex != -1) {
+    lobbies[lobbyIndex].users[userIndex].guess = guess;
+    lobbies[lobbyIndex].users[userIndex].isGuessing = false;
+    lobbies[lobbyIndex].users[userIndex].score =
+      lobbies[lobbyIndex].users[userIndex].score + points;
+    lobbies[lobbyIndex].users[userIndex].scoreAdded = points;
+
+    return lobbies[lobbyIndex].users[userIndex];
+  }
+};
+
+const checkUsersDoneGuessing = (lobbyId) => {
+  const lobbyIndex = lobbies.findIndex((lobby) => lobby.lobbyId === lobbyId);
+  if (lobbyIndex == -1) {
+    return false;
+  }
+  let doneGuessing = true;
+  lobbies[lobbyIndex].users.forEach((user) => {
+    if (user.isGuessing) {
+      doneGuessing = false;
+    }
+  });
+  if (doneGuessing) {
+    lobbies[lobbyIndex].doneGuessing = doneGuessing;
+  }
+  return doneGuessing;
 };
 
 module.exports = {
   addUser,
+  checkUsersDoneGuessing,
   createLobby,
   removeUser,
   getUsersInLobby,
   removeUserWithouLobbyId,
   startLobbyGame,
+  submitUserGuess,
   getLobbyGameProgress,
 };

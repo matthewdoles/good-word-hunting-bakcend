@@ -1,7 +1,7 @@
 const httpServer = require('http').createServer();
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://good-word-hunting.vercel.app/*',
   },
 });
 
@@ -11,6 +11,9 @@ const {
   getUsersInLobby,
   startLobbyGame,
   removeUserWithouLobbyId,
+  getLobbyGameProgress,
+  submitUserGuess,
+  checkUsersDoneGuessing,
 } = require('./functions/lobby');
 const { leaveLobby } = require('./lobby/leaveLobby');
 
@@ -19,11 +22,21 @@ io.on('connection', (socket) => {
   joinLobby(io, socket);
   leaveLobby(io, socket);
 
-  socket.on('startGame', ({ lobbyId }) => {
-    startLobbyGame(lobbyId);
+  socket.on('startGame', ({ lobbyId, mediaId }) => {
+    startLobbyGame(lobbyId, mediaId);
     io.to(lobbyId).emit('gameStarted', {
-      gameInProgress: true,
+      ...getLobbyGameProgress(lobbyId),
     });
+  });
+
+  socket.on('submitUserGuess', ({ userId, lobbyId, guess, points }) => {
+    submitUserGuess(userId, lobbyId, guess, points);
+    io.to(lobbyId).emit('updateLobbyUsers', {
+      users: getUsersInLobby(lobbyId),
+    });
+    if (checkUsersDoneGuessing(lobbyId)) {
+      io.to(lobbyId).emit('lobbyDoneGuessing');
+    }
   });
 
   socket.on('disconnect', () => {
@@ -36,6 +49,6 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(8080, () => {
+httpServer.listen(process.env.PORT || 8080, () => {
   console.log('listening on *:8080');
 });
