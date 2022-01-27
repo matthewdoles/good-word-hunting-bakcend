@@ -1,28 +1,44 @@
-import { createLobby, addUser, getUsersInLobby } from '../functions/lobby.js';
+import {
+  addUser,
+  createLobby,
+  getLobbyIdIndex,
+  getUserIndex,
+} from '../functions/util.js';
+import { lobbies } from '../index.js';
 
 export const createNewLobby = (io, socket) => {
   socket.on('createLobby', ({ profileImage, username }, callback) => {
-    const newLobby = createLobby();
-    const { error, user } = addUser({
-      id: socket.id,
-      isAdmin: true,
-      profileImage: profileImage,
-      username: username,
-      lobbyId: newLobby.lobbyId,
-    });
-    if (error) {
-      return callback(error);
+    if (!username) {
+      return callback('Username required!');
     }
 
-    socket.join(newLobby.lobbyId);
+    const lobbyId = createLobby();
+    const lobbyIndex = getLobbyIdIndex(lobbyId);
+    if (lobbyIndex == -1) {
+      return callback('Cannot connect to lobby.');
+    }
+    const userIndex = getUserIndex(lobbyIndex, socket.id);
+    if (userIndex == -1) {
+      return callback('User already present in lobby.');
+    }
 
-    io.to(user.id).emit('userInfo', {
-      id: user.id,
-      lobbyId: newLobby.lobbyId,
+    const userId = addUser(lobbyIndex, {
+      id: socket.id,
+      isAdmin: true,
+      profileImage,
+      username,
+      lobbyId,
     });
 
-    io.to(newLobby.lobbyId).emit('updateLobbyUsers', {
-      users: getUsersInLobby(user.lobbyId),
+    socket.join(lobbyId);
+
+    io.to(userId).emit('userInfo', {
+      id: userId,
+      lobbyId: lobbyId,
+    });
+
+    io.to(lobbyId).emit('updateLobbyUsers', {
+      users: lobbies[lobbyIndex].users,
     });
     callback();
   });

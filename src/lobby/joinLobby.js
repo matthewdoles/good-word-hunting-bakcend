@@ -1,35 +1,35 @@
-import {
-  addUser,
-  getUsersInLobby,
-  getLobbyGameProgress,
-} from '../functions/lobby.js';
+import { addUser, getLobbyIdIndex } from '../functions/util.js';
+import { lobbies } from '../index.js';
 
 export const joinLobby = (io, socket) => {
-  socket.on('joinLobby', (userInfo, callback) => {
-    const { error, user } = addUser({
-      id: socket.id,
-      isAdmin: false,
-      lobbyId: userInfo.lobbyId,
-      profileImage: userInfo.profileImage,
-      username: userInfo.username,
-    });
-    if (error) {
-      return callback(error);
+  socket.on('joinLobby', ({ lobbyId, profileImage, username }, callback) => {
+    const lobbyIndex = getLobbyIdIndex(lobbyId);
+    if (lobbyIndex == -1) {
+      return callback('Cannot connect to lobby.');
     }
 
-    socket.join(user.lobbyId);
+    const userId = addUser(lobbyIndex, {
+      id: socket.id,
+      isAdmin: false,
+      lobbyId,
+      profileImage,
+      username,
+    });
 
-    io.to(user.id).emit('userInfo', {
-      id: user.id,
-      lobbyId: user.lobbyId,
+    socket.join(lobbyId);
+
+    io.to(userId).emit('userInfo', {
+      id: userId,
+      lobbyId,
     });
 
     io.to(user.id).emit('gameStarted', {
-      ...getLobbyGameProgress(user.lobbyId),
+      gameInProgress: lobbies[lobbyIndex].gameInProgress,
+      mediaId: lobbies[lobbyIndex].mediaId,
     });
 
     io.to(user.lobbyId).emit('updateLobbyUsers', {
-      users: getUsersInLobby(user.lobbyId),
+      users: lobbies[lobbyIndex].users,
     });
     callback();
   });
