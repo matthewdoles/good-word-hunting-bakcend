@@ -13,10 +13,16 @@ export const generateLobbyNumber = (length) => {
 };
 
 export const createLobby = () => {
+  const lobbyId = generateLobbyNumber(4);
+  const lobbyIndex = getLobbyIdIndex(lobbyId);
+  if (lobbyIndex != -1) {
+    createLobby();
+  }
+
   const lobby = {
     doneGuessing: false,
     gameInProgress: false,
-    lobbyId: generateLobbyNumber(4),
+    lobbyId: lobbyId,
     mediaId: '',
     users: [],
   };

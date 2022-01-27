@@ -28,7 +28,7 @@ export const submitGuess = (io, socket) => {
         users: lobbies[lobbyIndex].users,
       });
 
-      if (checkUsersDoneGuessing(lobbyId)) {
+      if (checkUsersDoneGuessing(lobbyIndex)) {
         io.to(lobbyId).emit('lobbyDoneGuessing');
       }
     }

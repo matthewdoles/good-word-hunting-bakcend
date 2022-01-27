@@ -23,12 +23,12 @@ export const joinLobby = (io, socket) => {
       lobbyId,
     });
 
-    io.to(user.id).emit('gameStarted', {
+    io.to(userId).emit('gameStarted', {
       gameInProgress: lobbies[lobbyIndex].gameInProgress,
       mediaId: lobbies[lobbyIndex].mediaId,
     });
 
-    io.to(user.lobbyId).emit('updateLobbyUsers', {
+    io.to(lobbyId).emit('updateLobbyUsers', {
       users: lobbies[lobbyIndex].users,
     });
     callback();

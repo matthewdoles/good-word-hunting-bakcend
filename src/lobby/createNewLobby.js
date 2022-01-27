@@ -18,7 +18,7 @@ export const createNewLobby = (io, socket) => {
       return callback('Cannot connect to lobby.');
     }
     const userIndex = getUserIndex(lobbyIndex, socket.id);
-    if (userIndex == -1) {
+    if (userIndex != -1) {
       return callback('User already present in lobby.');
     }
 
