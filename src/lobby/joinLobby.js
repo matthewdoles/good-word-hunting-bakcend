@@ -25,7 +25,8 @@ export const joinLobby = (io, socket) => {
 
     io.to(userId).emit('gameStarted', {
       gameInProgress: lobbies[lobbyIndex].gameInProgress,
-      mediaId: lobbies[lobbyIndex].mediaId,
+      round: lobbies[lobbyIndex].round,
+      media: lobbies[lobbyIndex].media,
     });
 
     io.to(lobbyId).emit('updateLobbyUsers', {

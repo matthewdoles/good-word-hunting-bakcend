@@ -23,7 +23,8 @@ export const createLobby = () => {
     doneGuessing: false,
     gameInProgress: false,
     lobbyId: lobbyId,
-    mediaId: '',
+    media: {},
+    round: 1,
     users: [],
   };
   lobbies.push(lobby);

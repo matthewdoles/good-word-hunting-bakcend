@@ -6,6 +6,7 @@ import { disconnect } from './standard/disconnect.js';
 import { joinLobby } from './lobby/joinLobby.js';
 import { leaveLobby } from './lobby/leaveLobby.js';
 import { startGame } from './game/startGame.js';
+import { startNewRound } from './game/startNewRound.js';
 import { submitGuess } from './game/sumbitGuess.js';
 
 const httpServer = createServer();
@@ -26,6 +27,7 @@ io.on('connection', (socket) => {
   joinLobby(io, socket);
   leaveLobby(io, socket);
   startGame(io, socket);
+  startNewRound(io, socket);
   submitGuess(io, socket);
 });
 
