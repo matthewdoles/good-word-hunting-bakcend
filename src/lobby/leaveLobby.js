@@ -16,7 +16,6 @@ export const leaveLobby = (io, socket) => {
     if (userIndex == -1) {
       return callback('Cannot find user in lobby.');
     }
-
     removeUser(lobbyIndex, userIndex);
     const isEmpty = removeIfEmptyLobby(lobbyIndex);
     if (!isEmpty) {

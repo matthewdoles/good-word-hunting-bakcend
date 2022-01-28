@@ -1,4 +1,5 @@
 import {
+  checkUsersDoneGuessing,
   getLobbyIdIndex,
   removeIfEmptyLobby,
   removeUserWithouLobbyId,
@@ -16,6 +17,9 @@ export const disconnect = (io, socket) => {
           io.to(user.lobbyId).emit('updateLobbyUsers', {
             users: lobbies[lobbyIndex].users,
           });
+          if (checkUsersDoneGuessing(lobbyIndex)) {
+            io.to(user.lobbyId).emit('lobbyDoneGuessing');
+          }
         }
       }
     }
