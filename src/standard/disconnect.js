@@ -1,4 +1,5 @@
 import {
+  checkAdminStillPresent,
   checkUsersDoneGuessing,
   getLobbyIdIndex,
   removeIfEmptyLobby,
@@ -14,6 +15,11 @@ export const disconnect = (io, socket) => {
       if (lobbyIndex != -1) {
         const isEmpty = removeIfEmptyLobby(lobbyIndex);
         if (!isEmpty) {
+          const adminPresent = checkAdminStillPresent(lobbyIndex);
+          if (!adminPresent) {
+            lobbies[lobbyIndex].users[0].isAdmin = true;
+            io.to(lobbies[lobbyIndex].users[0].id).emit('setAsLobbyAdmin');
+          }
           io.to(user.lobbyId).emit('updateLobbyUsers', {
             users: lobbies[lobbyIndex].users,
           });

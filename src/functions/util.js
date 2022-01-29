@@ -90,3 +90,13 @@ export const checkUsersDoneGuessing = (lobbyIndex) => {
   }
   return doneGuessing;
 };
+
+export const checkAdminStillPresent = (lobbyIndex) => {
+  let adminPresent = false;
+  lobbies[lobbyIndex].users.forEach((user) => {
+    if (user.isAdmin) {
+      adminPresent = true;
+    }
+  });
+  return adminPresent;
+};
