@@ -8,6 +8,7 @@ import { leaveLobby } from './lobby/leaveLobby.js';
 import { startGame } from './game/startGame.js';
 import { startNewRound } from './game/startNewRound.js';
 import { submitGuess } from './game/sumbitGuess.js';
+import { updateGameDifficulty } from './game/updateGameDifficulty.js';
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
@@ -29,6 +30,7 @@ io.on('connection', (socket) => {
   startGame(io, socket);
   startNewRound(io, socket);
   submitGuess(io, socket);
+  updateGameDifficulty(io, socket);
 });
 
 const port = process.env.PORT || 8080;

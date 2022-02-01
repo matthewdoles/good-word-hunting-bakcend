@@ -17,14 +17,16 @@ export const disconnect = (io, socket) => {
         if (!isEmpty) {
           const adminPresent = checkAdminStillPresent(lobbyIndex);
           if (!adminPresent) {
-            lobbies[lobbyIndex].users[0].isAdmin = true;
-            io.to(lobbies[lobbyIndex].users[0].id).emit('setAsLobbyAdmin');
-          }
-          io.to(user.lobbyId).emit('updateLobbyUsers', {
-            users: lobbies[lobbyIndex].users,
-          });
-          if (checkUsersDoneGuessing(lobbyIndex)) {
-            io.to(user.lobbyId).emit('lobbyDoneGuessing');
+            if (lobbies[lobbyIndex].users.length > 0) {
+              lobbies[lobbyIndex].users[0].isAdmin = true;
+              io.to(lobbies[lobbyIndex].users[0].id).emit('setAsLobbyAdmin');
+              io.to(user.lobbyId).emit('updateLobbyUsers', {
+                users: lobbies[lobbyIndex].users,
+              });
+              if (checkUsersDoneGuessing(lobbyIndex)) {
+                io.to(user.lobbyId).emit('lobbyDoneGuessing');
+              }
+            }
           }
         }
       }
