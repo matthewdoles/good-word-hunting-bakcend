@@ -24,6 +24,8 @@ export const joinLobby = (io, socket) => {
     });
 
     io.to(userId).emit('gameStarted', {
+      doneGuessing: lobbies[lobbyIndex].doneGuessing,
+      difficulty: lobbies[lobbyIndex].difficulty,
       gameInProgress: lobbies[lobbyIndex].gameInProgress,
       round: lobbies[lobbyIndex].round,
       media: lobbies[lobbyIndex].media,

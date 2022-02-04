@@ -13,6 +13,7 @@ export const startGame = (io, socket) => {
     lobbies[lobbyIndex].media = media;
 
     io.to(lobbyId).emit('gameStarted', {
+      doneGuessing: lobbies[lobbyIndex].doneGuessing,
       difficulty: lobbies[lobbyIndex].difficulty,
       gameInProgress: lobbies[lobbyIndex].gameInProgress,
       round: lobbies[lobbyIndex].round,
